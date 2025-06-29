@@ -1,11 +1,18 @@
-
-
+import axios from "axios"
 
 export const getNowPlayingMovies = async (req, res) => {
     try {
-        // const movies = await Movie.find({}).sort({ release_date: -1 }).limit(10);
-        // res.status(200).json(movies);
+        const {data}= await axios.get('https://api.themoviedb.org/3/movie/now_playing', {
+            headers: {
+               Authorization : `Bearer ${process.env.TMDB_API_KEY}`
+            }
+         })
+
+         const movies = data.results;
+        res.json({success:true,movies:movies});
     } catch (error) {
-        // res.status(500).json({ message: error.message });
+        console.log("Error fetching now playing movies:", error);
+       console.error(error);
+       res.json({success:false,message :error.message});
     }
 }
